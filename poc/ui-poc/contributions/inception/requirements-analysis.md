@@ -4,6 +4,8 @@ plugin: ui-poc
 adds:
   scopes:
     - ui-poc-comparison
+  sensors:
+    - ui-poc-evidence
   consumes:
     - artifact: ui-poc-rough-contract
       required: true
@@ -16,4 +18,4 @@ fragments:
 
 ### Rough UI evidence as requirements input
 
-Read ui-poc-rough-contract.md and its actual HTML assets alongside the core wireframes/user-flow. Carry stable screen/state identifiers into requirements and subsequent acceptance criteria. Separate provisional prototype decisions from explicitly approved scope and requirements; do not silently turn a visual placeholder into a settled requirement. Record unresolved decisions for the normal question flow and retain all core requirements outputs.
+Read the rough evidence and run the C router with explicit requirements/domain facts. Grilling may organize only the existing question frontier; AI-DLC asks and records answers. Domain-modeling is limited to terms, responsibility, ownership, and boundaries—never types, validation, allowed values, cardinality, or implementation. Do not create a separate confirmation, approval, or tracker action. Record the routed evidence bundle; missing facts or evidence block the gate.

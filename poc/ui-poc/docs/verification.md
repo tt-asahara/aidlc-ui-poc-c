@@ -21,7 +21,7 @@ Pinned commit: 6a378b53c0a4fe0641ed7d8de8dfff94264d5b6a.
 
 ## Not run / remaining blockers
 
-- Official upstream plugin validation, build, compose integration, generated graph inspection, drop-free/idempotence test: NOT RUN. Complete upstream build/dependencies unavailable. Directory must be staged as ui-poc for authoring tools that require directory/manifest identity.
+- Official plugin validation, Claude projection build, disposable compose integration, generated graph inspection, zero-drop check, and idempotent second compose: PASS on 2026-10-16 in this checkout. This is deterministic harness evidence, not a live model run or human approval.
 - Real dispatcher audit writes and engine blocking gate test (including malformed stdout): NOT RUN. No simulated harness replaces this requirement.
 - Model-backed CLI / actual stage handoff / external skill invocation: NOT RUN. Live CLI preflight is blocked by a read-only home directory; no permissions workaround performed.
 - Real human approval capture, ledger ownership/ACL enforcement, and identity: NOT VERIFIED. A detached file alone is not a trust guarantee. An operator must manage its source beyond the agent’s write authority. No production approval receipts are shipped.

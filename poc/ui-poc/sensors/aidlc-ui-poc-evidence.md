@@ -4,7 +4,7 @@ kind: deterministic
 command: bun {{HARNESS_DIR}}/tools/aidlc-sensor-ui-poc-evidence.ts
 default_severity: blocking
 fire_on: gate
-description: Verify UI contract asset hashes and stable mapping coverage; consumers require upstream approval evidence
+description: Verify UI contracts plus Arm C routing, Design Context, pinned payloads, and WCAG correction evidence
 category: ui-evidence
 input_schema:
   output_path: string
@@ -18,6 +18,6 @@ timeout_seconds: 30
 
 # UI evidence gate
 
-No matches filter: every existing declared stage deliverable triggers verification of its sibling plugin contract, so an unrelated Markdown artifact cannot bypass the check. The core gate must still verify declared artifacts exist; this sensor cannot fire when no deliverable is dispatched. Rough and refined producer gates validate new evidence without adding a second approval. Code Generation requires the approved refined contract, and Build and Test requires the approved implementation contract. The ordinary engine gate remains the source of stage approval; the detached ledger captures its independently verified provenance.
+No matches filter: declared stage deliverables trigger contract checks; every C stage with routing rules also verifies facts, engine-bound context, source-lock bytes, selected/disabled skill events, hashed inputs/outputs, creator-confirmed Design Context, and the WCAG correction report. Requirements Analysis and Domain Design attach the same blocking sensor through the additive seam. Skipped engine stages emit no deliverable and create no sensor obligation. Rough/refined checks add no approval; AI-DLC remains the only lifecycle and approval owner.
 
-The pinned dispatcher resolves a .ts basename, runs it with its own runtime, and consumes JSON `pass` plus `findings_count`. It does not execute an arbitrary shell prefix. Never replace this adapter with a guessed command API. Runtime composition/gate integration remains untested.
+The pinned dispatcher resolves a .ts basename, runs it with its own runtime, and consumes JSON `pass` plus `findings_count`. It does not execute an arbitrary shell prefix. Never replace this adapter with a guessed command API.

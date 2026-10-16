@@ -22,7 +22,7 @@
   "source_lock": "source-lock.json",
   "actual_stage_read_evidence": null,
   "selection": {
-    "status": "selected historical component; not installed or executed",
+    "status": "installed from pinned historical component; live stage execution not verified",
     "label": "Matt + historical official Impeccable frontend-design component",
     "repository": "pbakaus/impeccable",
     "commit": "209444a9d552c18bcaa74e26bf66a25fc568a767",

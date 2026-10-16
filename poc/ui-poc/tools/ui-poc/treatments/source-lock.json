@@ -1215,7 +1215,7 @@
     "Freeze catalog+seed or record API responses; define native image tools versus optional direct OpenAI route. No execution done."
   ],
   "selected_C": {
-    "status": "selected historical component; not installed or executed",
+    "status": "installed from pinned historical component; live stage execution not verified",
     "label": "Matt + historical official Impeccable frontend-design component",
     "repository": "pbakaus/impeccable",
     "commit": "209444a9d552c18bcaa74e26bf66a25fc568a767",
