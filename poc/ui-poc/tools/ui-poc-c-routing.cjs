@@ -21,6 +21,13 @@ function validContext(value, stage) {
   return value && value.stage === stage && value.scope === 'ui-poc-comparison' && typeof value.recordId === 'string' && value.recordId.trim() && Number.isInteger(value.attempt) && value.attempt > 0 && /^[a-f0-9]{64}$/.test(value.engineStateSha256 || '') && (value.unit === null || typeof value.unit === 'string');
 }
 
+function artifactJson(projectRoot, ref, label) {
+  let value;
+  try { value = JSON.parse(boundedFile(projectRoot, ref.path).toString('utf8')); }
+  catch (e) { throw Error(`Invalid ${label}: ${e.message}`); }
+  return value;
+}
+
 function stateField(content, name) {
   const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   return content.match(new RegExp(`^\\*\\*${escaped}\\*\\*:\\s*(.+?)\\s*$`, 'm'))?.[1] ?? null;
@@ -137,6 +144,12 @@ function verify(stage, logPath, facts = {}, options = {}) {
       const correction = applied.outputs.find(ref => ref.name === 'accessibility-correction-report');
       if (context?.kind !== 'file') return fail('Design Context must be a hashed creator-confirmed file snapshot');
       if (correction?.kind !== 'file') return fail('WCAG correction report must be a hashed output file');
+      try {
+        const design = artifactJson(process.cwd(), context, 'Design Context snapshot');
+        if (design.schema !== 1 || design.creatorConfirmed !== true || !['loaded-instructions','impeccable-file','aidlc-questions'].includes(design.source?.kind) || !/^[a-f0-9]{64}$/.test(design.commonBriefSha256 || '') || !['audience','useCases','brandTone'].every(k => typeof design[k] === 'string' && design[k].trim())) return fail('Design Context snapshot lacks creator confirmation, source provenance, common brief binding, or required fields');
+        const report = artifactJson(process.cwd(), correction, 'WCAG correction report');
+        if (report.schema !== 1 || report.pinnedSourcePreserved !== true || report.sourceStatement !== '18px+ or 14px bold' || report.normalCssPx !== 24 || report.boldCssPx !== 18.6667 || report.normativeBasis !== 'WCAG 18pt or 14pt bold') return fail('WCAG correction report does not apply the declared pinned-source adapter');
+      } catch (e) { return fail(e.message); }
     }
   }
   for (const invocation of expected.invocations.filter(x => x.decision === 'do-not-use' && x.condition)) {
