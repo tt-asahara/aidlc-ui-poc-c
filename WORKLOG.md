@@ -2,12 +2,13 @@
 
 ## 2026-10-16 — Deterministic Matt + Impeccable stage harness
 
+- Tracking issue: https://github.com/tt-asahara/aidlc-ui-poc-c/issues/1
 - Based work on `feature/ui-poc-foundation` at `442b44d09f339cb6425098b0d25811d4c3ca6e92`; core, A, and B remain unchanged.
 - Adapted B's full-stage deterministic routing and blocking sensor for C, retaining Matt at `49dd158d1076134a641b33efb035946536778336` and selecting only historical Impeccable frontend-design/teach-impeccable at `209444a9d552c18bcaa74e26bf66a25fc568a767`.
 - Added creator-confirmed Design Context evidence through the existing AI-DLC question flow, prevented AGENTS.md writes/extra approval rounds, and required the same common brief across A/B/C.
 - Preserved all pinned source bytes and licenses. Added an explicit WCAG adapter correcting the source's 18px/14px-bold statement to 24 CSS px/18.6667 CSS px and requiring a hashed correction report.
 - Live model execution and human approval remain unverified. Mechanically checked logs are agent attestations; the official sensor API has no canonical attempt identity, so byte-identical states across distinct attempts are not fully authenticated.
-- Verification: 58 focused Node tests passed; deterministic packaging passed; official authored-plugin validation and Claude build passed; disposable compose had zero drops, compiled the graph, and was idempotent on its second pass.
+- Verification: 62 focused Node tests passed; deterministic packaging passed; official authored-plugin validation and Claude build passed; disposable compose had zero drops, compiled the graph, and was idempotent on its second pass.
 
 ## 2026-10-14 — Pinned foundation and historical treatment payload
 

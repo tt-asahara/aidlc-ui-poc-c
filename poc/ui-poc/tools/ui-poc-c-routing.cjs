@@ -28,6 +28,13 @@ function artifactJson(projectRoot, ref, label) {
   return value;
 }
 
+function verifiedArtifactRef(projectRoot, ref, label) {
+  if (!ref || typeof ref.path !== 'string' || !/^[a-f0-9]{64}$/.test(ref.sha256 || '')) throw Error(`Invalid ${label} reference`);
+  const bytes = boundedFile(projectRoot, ref.path);
+  if (hash(bytes) !== ref.sha256) throw Error(`${label} hash mismatch`);
+  return bytes;
+}
+
 function stateField(content, name) {
   const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   return content.match(new RegExp(`^\\*\\*${escaped}\\*\\*:\\s*(.+?)\\s*$`, 'm'))?.[1] ?? null;
@@ -146,7 +153,9 @@ function verify(stage, logPath, facts = {}, options = {}) {
       if (correction?.kind !== 'file') return fail('WCAG correction report must be a hashed output file');
       try {
         const design = artifactJson(process.cwd(), context, 'Design Context snapshot');
-        if (design.schema !== 1 || design.creatorConfirmed !== true || !['loaded-instructions','impeccable-file','aidlc-questions'].includes(design.source?.kind) || !/^[a-f0-9]{64}$/.test(design.commonBriefSha256 || '') || !['audience','useCases','brandTone'].every(k => typeof design[k] === 'string' && design[k].trim())) return fail('Design Context snapshot lacks creator confirmation, source provenance, common brief binding, or required fields');
+        if (design.schema !== 1 || design.creatorConfirmed !== true || !['loaded-instructions','impeccable-file','aidlc-questions'].includes(design.source?.kind) || !['audience','useCases','brandTone'].every(k => typeof design[k] === 'string' && design[k].trim())) return fail('Design Context snapshot lacks observed confirmation, source provenance, common brief binding, or required fields');
+        verifiedArtifactRef(process.cwd(), design.source, 'Design Context confirmation source');
+        verifiedArtifactRef(process.cwd(), design.commonBrief, 'common comparison brief');
         const report = artifactJson(process.cwd(), correction, 'WCAG correction report');
         if (report.schema !== 1 || report.pinnedSourcePreserved !== true || report.sourceStatement !== '18px+ or 14px bold' || report.normalCssPx !== 24 || report.boldCssPx !== 18.6667 || report.normativeBasis !== 'WCAG 18pt or 14pt bold') return fail('WCAG correction report does not apply the declared pinned-source adapter');
       } catch (e) { return fail(e.message); }
@@ -154,6 +163,15 @@ function verify(stage, logPath, facts = {}, options = {}) {
   }
   for (const invocation of expected.invocations.filter(x => x.decision === 'do-not-use' && x.condition)) {
     if (!log.events.some(e => e.type === 'skill-skipped' && e.skill === invocation.skill && e.condition === invocation.condition && typeof e.reason === 'string' && e.reason.trim())) return fail(`Missing conditional skip evidence: ${invocation.skill}`);
+  }
+  const teach = expected.invocations.find(x => x.skill === 'teach-impeccable' && x.decision === 'use');
+  if (teach) {
+    const teachIndex = log.events.findIndex(e => e.type === 'skill-applied' && e.skill === 'teach-impeccable');
+    const designIndex = log.events.findIndex(e => e.type === 'skill-applied' && e.skill === 'frontend-design');
+    const teachOutput = log.events[teachIndex]?.outputs?.find(ref => ref.name === 'creator-confirmed-design-context-snapshot');
+    const designInput = log.events[designIndex]?.inputs?.find(ref => ref.name === 'creator-confirmed-design-context-snapshot');
+    if (teachIndex < 0 || designIndex <= teachIndex) return fail('teach-impeccable must complete before frontend-design');
+    if (teachOutput?.kind !== 'file' || designInput?.kind !== 'file' || teachOutput.path !== designInput.path || teachOutput.sha256 !== designInput.sha256) return fail('teach-impeccable context output is not the exact frontend-design context input');
   }
   if (log.events.some(e => e.type === 'approval' || e.type === 'tracker-publish')) return fail('Skill evidence log must not record or perform approval or tracker publication');
   return {pass:true, findings_count:0, findings:[]};
