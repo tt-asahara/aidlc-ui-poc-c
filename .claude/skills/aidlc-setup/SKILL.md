@@ -1,0 +1,58 @@
+---
+name: aidlc-setup
+description: Set up this repository's pinned AI-DLC v2.11.0 Claude runtime, Arm C UI plugin, routing companion, and historical Impeccable/Matt payload in another product while preserving existing work.
+argument-hint: "[C checkout path] [product repository path]"
+user-invocable: true
+---
+
+# Set up AI-DLC C
+
+Invoke from the C checkout containing this skill. Invocation permits inspection and dry-run only; applying reviewed product changes requires separate explicit authorization.
+
+## Establish boundaries
+
+1. Resolve absolute `SRC` and `PRODUCT`. Confirm an isolated C target, project-local scope, trust/permissions, and preview-versus-apply authority. Never change authentication, global/shared settings, or model configuration.
+2. Inspect both repos with `git -C <path> status --short --branch`. Preserve all existing tracked, untracked, ignored, and uncommitted files. Never replace product `CLAUDE.md`, `AGENTS.md`, `.claude`, skills, hooks, settings, or plugins.
+3. Read [`../../../poc/ui-poc/README.md`](../../../poc/ui-poc/README.md), [`../../../poc/ui-poc/docs/verification.md`](../../../poc/ui-poc/docs/verification.md), [`../../../poc/ui-poc/docs/contract.md`](../../../poc/ui-poc/docs/contract.md), [`../../../poc/ui-poc/docs/c-stage-skill-matrix.md`](../../../poc/ui-poc/docs/c-stage-skill-matrix.md), [`../../../poc/ui-poc/treatments/c.json`](../../../poc/ui-poc/treatments/c.json), its [`source-lock.json`](../../../poc/ui-poc/treatments/source-lock.json), and [`../../../poc/skill-installation.json`](../../../poc/skill-installation.json).
+
+Keep A/B/C conditions comparable. Do not substitute Anthropic frontend-design, latest Impeccable, engine/hooks/subagents, or an unavailable historical custom extension.
+
+## Build and preview
+
+From `SRC`, stop on failure:
+
+```bash
+bun install --frozen-lockfile
+bun scripts/package.ts claude
+bun dist/claude/.claude/tools/aidlc-plugin-build.ts poc/ui-poc claude --json
+bun "$SRC/dist/claude/.claude/tools/aidlc.ts" config --from "$SRC/dist/claude" --harness claude --project-dir "$PRODUCT" --mcp none --dry-run
+```
+
+Use exactly `SRC/dist/claude` as runtime source and `SRC/poc/ui-poc/dist/claude` as marketplace. Confirm projection of `tools/ui-poc-c-routing.cjs`, `tools/ui-poc/c-stage-routing.json`, treatment/source-lock/runtime contract, and sensor adapter. Never use `dist` or `.claude` for `--from`, edit generated output, or use `--force`.
+
+Present target, writes, and collisions. Stop on dirty target, differing path, or impact to settings/hooks/skills/plugins. A passing preview is not apply authority. Apply only after approval by rerunning the same command without `--dry-run`.
+
+## Place the exact C payload
+
+Compare complete product-relative directories: `.agents/skills/{prototype,grilling,domain-modeling,to-spec}`, `frontend-design` with all seven reference files, `teach-impeccable`, `.agents/skills/LICENSES/mattpocock-skills`, and `.agents/skills/LICENSES/impeccable` with `LICENSE` and `NOTICE.md`. Add absent directories only in the approved write set; leave byte-identical ones; stop on differences. Never merge or overwrite. Verify paths, bytes, commits, dependency, licenses, and exclusions against the installation manifest, treatment C, and source lock.
+
+## Install and verify
+
+Provide a handoff with resolved paths and commands, then open a new Claude session rooted at `PRODUCT`; shell `cd` is insufficient. Verify host root and `git rev-parse --show-toplevel`, then run:
+
+```text
+/plugin marketplace add <SRC>/poc/ui-poc/dist/claude
+/plugin install aidlc-ui-poc@aidlc-plugins
+```
+
+Preserve existing plugins. Start another PRODUCT-rooted session, inspect `/plugin` **Installed** (or `claude plugin list`), and `/aidlc --doctor`. Confirm `ui-poc-comparison`, no unexpected compose drops, treatment C, routing verifier/config, runtime companion, sensor, all references/dependency/licenses. Do not use `/plugin list`.
+
+## Preserve C adapters
+
+Before design use, confirm Design Context in order: creator-confirmed loaded instructions; root `.impeccable.md`; then fixed `teach-impeccable` only as a bounded organizer in AI-DLC's existing question flow. Audience, use cases, and brand tone require creator confirmation. Do not infer from code, edit `AGENTS.md`, add an interview, or add approval. Bind the same confirmed A/B/C brief and record C-only follow-up as an evaluation difference.
+
+Keep pinned reference bytes unchanged. For every design application, read and hash-verify all seven references and produce the routing contract's hashed WCAG correction report: large text is 24 CSS px normal or approximately 18.6667 CSS px bold (WCAG 18pt/14pt bold), overriding only the pinned file's incorrect 18px/14px statement through the adapter.
+
+Record Arm C, read installed contracts/entrypoints, invoke `/aidlc --scope ui-poc-comparison`, preserve brownfield/greenfield classification, and stop after rough-mockups review absent separate authorization. Never fabricate approval-ledger entries.
+
+Report paths, build/dry-run, authorized writes, collisions, exact payload/licenses, compose/plugin/doctor, Design Context and WCAG readiness, and stop point. Separate static/synthetic checks from live execution, model use, and approval.
